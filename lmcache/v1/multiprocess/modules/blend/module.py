@@ -1,9 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 """BlendModule: composition of the blend mixins + engine-module wiring."""
 
-# Future
-from __future__ import annotations
-
 # Standard
 from collections import OrderedDict
 from queue import Queue
@@ -17,6 +14,7 @@ from lmcache.v1.mp_coordinator.blend_client import BlendCoordinatorClient
 from lmcache.v1.multiprocess.engine_context import MPCacheServerContext
 from lmcache.v1.multiprocess.engine_module import (
     DiscoverableModule,
+    EngineModule,
     InstanceLivenessTarget,
     ModuleBuildContext,
 )
@@ -70,11 +68,8 @@ class BlendModule(
     module_order = 60
 
     @classmethod
-    def create(cls, build_ctx: ModuleBuildContext) -> BlendModule | None:
+    def create(cls, build_ctx: ModuleBuildContext) -> EngineModule | None:
         """Build when ``--engine-type blend`` is selected.
-
-        Reads the LMCache-driven transfer module off the build context rather
-        than importing it, so module wiring stays with the creator.
 
         Raises:
             ValueError: If blend is requested with an engine-driven-only
